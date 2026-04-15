@@ -1,4 +1,4 @@
-// models/Group.js
+// models/Group.j
 // Defines the schema for a StudySync study group
 // Authors: Ireoluwatomiwa Awonola, Olimeh Kelvin, Francis Ngonadi
 
