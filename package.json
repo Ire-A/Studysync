@@ -1,0 +1,28 @@
+{
+  "name": "studysync",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ire-A/Studysync.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ire-A/Studysync/issues"
+  },
+  "homepage": "https://github.com/Ire-A/Studysync#readme",
+  "dependencies": {
+    "connect-mongo": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "mongoose": "^9.4.1"
+  }
+}
