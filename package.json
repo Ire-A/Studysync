@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Ire-A/Studysync#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "connect-mongo": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
