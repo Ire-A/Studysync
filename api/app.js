@@ -61,10 +61,3 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`StudySync server running on port ${PORT}`));
-```
-
-And your `.env` file should look like this:
-```
-MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/studysync
-SESSION_SECRET=your_secret_key_here
-PORT=5000
