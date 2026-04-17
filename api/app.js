@@ -42,12 +42,12 @@ app.get('/', (req, res) => {
   // You can send any response you like
   res.json({ 
     message: 'Welcome to the StudySync API!',
-    endpoints: {
-      register: 'POST /api/users/register',
-      login: 'POST /api/users/login',
-      groups: 'GET /api/groups',
-      // ... list other endpoints for convenience
-    }
+    // endpoints: {
+    //   register: 'POST /api/users/register',
+    //   login: 'POST /api/users/login',
+    //   groups: 'GET /api/groups',
+      
+    // }
   });
 });
 
