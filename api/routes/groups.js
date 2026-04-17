@@ -1,79 +1,62 @@
-// routes/groups.js
-// Handles CRUD operations for study groups
-// Authors: Ireoluwatomiwa Awonola, Olimeh Kelvin, Francis Ngonadi
+// This file handles the CRUD operations for study groups
+const express = require('express'); // import Express to create route handlers
+const router = express.Router(); // create a new router object to define our group routes
+const Group = require('../models/Group'); // import the Group model to interact with the database
+const auth = require('../middleware/auth'); // import the authentication middleware to protect routes
 
-const express = require('express');
-const router = express.Router();
-const Group = require('../models/Group');
-const auth = require('../middleware/auth');
+// This method returns all groups the logged in user is a member of
+router.get('/', auth, async (req, res) => { // We use GET, require auth, and use async for database calls
+  try { // We wrap in try/catch to handle errors gracefully
+    const groups = await Group.find({ members: req.user.id }) // We query for groups where the user's ID is in the members array
+      .populate('createdBy', 'name email') // We populate the creator's name and email (no password)
+      .populate('members', 'name email'); // We populate all members' names and emails
 
-// ─── Get All Groups ───────────────────────────────────────────────────────────
+    res.status(200).json({ groups }); 
 
-// GET /api/groups
-// Returns all groups the logged in user is a member of
-router.get('/', auth, async (req, res) => {
-  try {
-    const groups = await Group.find({ members: req.user.id })
-      .populate('createdBy', 'name email')
-      .populate('members', 'name email');
-
-    res.status(200).json({ groups });
-
-  } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
+  } catch (err) { 
+    res.status(500).json({ message: 'Server error', error: err.message }); 
   }
 });
 
-// ─── Get Single Group ─────────────────────────────────────────────────────────
-
-// GET /api/groups/:id
-// Returns a single group by ID
-router.get('/:id', auth, async (req, res) => {
+// This method returns a single group by ID
+router.get('/:id', auth, async (req, res) => { // GET with group ID parameter, requires authentication
   try {
-    const group = await Group.findById(req.params.id)
-      .populate('createdBy', 'name email')
-      .populate('members', 'name email');
+    const group = await Group.findById(req.params.id) // We find the group by the ID from the URL
+      .populate('createdBy', 'name email') // We populate creator details
+      .populate('members', 'name email'); // We populate member details
 
-    if (!group) {
-      return res.status(404).json({ message: 'Group not found' });
+    if (!group) { // If no group is found
+      return res.status(404).json({ message: 'Group not found' }); // return a 404 not found
     }
-
     // Check if the logged in user is a member of the group
-    if (!group.members.some(member => member._id.equals(req.user.id))) {
-      return res.status(403).json({ message: 'Forbidden - you are not a member of this group' });
-    }
-
-    res.status(200).json({ group });
-
+    if (!group.members.some(member => member._id.equals(req.user.id))) { // We use .some() to see if any member ID matches the logged-in user's ID
+      return res.status(403).json({ message: 'Forbidden - you are not a member of this group' }); // We deny access if not a member
+    } // We did this to ensure that a user does not log into a group they do not belong.
+    res.status(200).json({ group }); 
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 
-// ─── Create Group ─────────────────────────────────────────────────────────────
-
-// POST /api/groups
-// Creates a new study group
-router.post('/', auth, async (req, res) => {
+// This method creates a new study group
+router.post('/', auth, async (req, res) => { // POST request to create a group, requires auth
   try {
-    const { name, description } = req.body;
+    const { name, description } = req.body; // Destructure name and description from request body
 
     // Validate that name is provided
-    if (!name) {
-      return res.status(400).json({ message: 'Group name is required' });
+    if (!name) { // We check if name exists
+      return res.status(400).json({ message: 'Group name is required' }); // We send a 400 error if missing
     }
-
     // Create the group, adding the creator as the first member
-    const group = await Group.create({
-      name,
-      description,
-      createdBy: req.user.id,
-      members: [req.user.id]
+    const group = await Group.create({ // We use Mongoose's create method
+      name, // pass the name
+      description, // pass the description 
+      createdBy: req.user.id, // set the creator to the logged-in user's ID
+      members: [req.user.id] // start the members array with the creator
     });
-
-    res.status(201).json({
+    res.status(201).json({ 
       message: 'Group created successfully',
-      group
+      group 
     });
 
   } catch (err) {
@@ -81,30 +64,26 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// ─── Join Group ───────────────────────────────────────────────────────────────
-
-// POST /api/groups/:id/join
-// Adds the logged in user to a group
-router.post('/:id/join', auth, async (req, res) => {
+// This method adds the logged in user to a group
+router.post('/:id/join', auth, async (req, res) => { // POST to /:id/join, auth required
   try {
-    const group = await Group.findById(req.params.id);
+    const group = await Group.findById(req.params.id); // We find the group by ID
 
-    if (!group) {
+    if (!group) { // If group doesn't exist
       return res.status(404).json({ message: 'Group not found' });
     }
 
     // Check if user is already a member
-    if (group.members.includes(req.user.id)) {
-      return res.status(400).json({ message: 'You are already a member of this group' });
+    if (group.members.includes(req.user.id)) { // We check if the user's ID is already in the members array
+      return res.status(400).json({ message: 'You are already a member of this group' }); // We prevent duplicate joining
     }
-
     // Add the user to the members array
-    group.members.push(req.user.id);
-    await group.save();
+    group.members.push(req.user.id); // push the user ID into the members array
+    await group.save(); // save the updated group to the database
 
     res.status(200).json({
       message: 'Joined group successfully',
-      group
+      group 
     });
 
   } catch (err) {
@@ -112,39 +91,36 @@ router.post('/:id/join', auth, async (req, res) => {
   }
 });
 
-// ─── Update Group ─────────────────────────────────────────────────────────────
-
-// PUT /api/groups/:id
-// Updates a group's name or description - only the creator can do this
-router.put('/:id', auth, async (req, res) => {
+// This method updates a group's name or description - only the creator can do this
+router.put('/:id', auth, async (req, res) => { // PUT request to update group, auth required
   try {
-    const { name, description } = req.body;
+    const { name, description } = req.body; // get the fields to update
 
     // Validate that at least one field is provided
-    if (!name && !description) {
-      return res.status(400).json({ message: 'Please provide a name or description to update' });
+    if (!name && !description) { // If neither name nor description is provided
+      return res.status(400).json({ message: 'Please provide a name or description to update' }); // return a 400 error
     }
 
-    const group = await Group.findById(req.params.id);
+    const group = await Group.findById(req.params.id); // We find the group
 
     if (!group) {
       return res.status(404).json({ message: 'Group not found' });
     }
 
     // Only the creator can update the group
-    if (!group.createdBy.equals(req.user.id)) {
-      return res.status(403).json({ message: 'Forbidden - only the group creator can update this group' });
+    if (!group.createdBy.equals(req.user.id)) { // We compare the creator's ID with the logged-in user's ID
+      return res.status(403).json({ message: 'Forbidden - only the group creator can update this group' }); // We deny update if not creator
     }
 
     // Build update object with only provided fields
-    const updates = {};
-    if (name) updates.name = name;
-    if (description) updates.description = description;
+    const updates = {}; // start with an empty object
+    if (name) updates.name = name; // add name if provided
+    if (description) updates.description = description; // add description if provided
 
-    const updatedGroup = await Group.findByIdAndUpdate(
-      req.params.id,
-      updates,
-      { new: true, runValidators: true }
+    const updatedGroup = await Group.findByIdAndUpdate( // use findByIdAndUpdate to update in one operation
+      req.params.id, // The group ID
+      updates, // The fields to update
+      { new: true, runValidators: true } // return the updated document and run schema validators
     );
 
     res.status(200).json({
@@ -157,30 +133,26 @@ router.put('/:id', auth, async (req, res) => {
   }
 });
 
-// ─── Delete Group ─────────────────────────────────────────────────────────────
-
-// DELETE /api/groups/:id
-// Deletes a group - only the creator can do this
-router.delete('/:id', auth, async (req, res) => {
+// This method deletes a group - only the creator can do this
+router.delete('/:id', auth, async (req, res) => { // DELETE request, auth required
   try {
-    const group = await Group.findById(req.params.id);
+    const group = await Group.findById(req.params.id); // find the group
 
     if (!group) {
       return res.status(404).json({ message: 'Group not found' });
     }
 
     // Only the creator can delete the group
-    if (!group.createdBy.equals(req.user.id)) {
+    if (!group.createdBy.equals(req.user.id)) { // check if the logged-in user is the creator
       return res.status(403).json({ message: 'Forbidden - only the group creator can delete this group' });
     }
 
-    await Group.findByIdAndDelete(req.params.id);
+    await Group.findByIdAndDelete(req.params.id); // delete the group from the database
 
-    res.status(200).json({ message: 'Group deleted successfully' });
+    res.status(200).json({ message: 'Group deleted successfully' }); //  send success response
 
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
-
-module.exports = router;
+module.exports = router; 

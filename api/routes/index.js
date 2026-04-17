@@ -1,19 +1,11 @@
-// routes/index.js
-// Mounts all route files for the StudySync API
-// Authors: Ireoluwatomiwa Awonola, Olimeh Kelvin, Francis Ngonadi
-
+// This file mounts all route files for the StudySync API
 const express = require('express');
 const router = express.Router();
-
-// ─── Import All Route Files ───────────────────────────────────────────────────
-
 const userRoutes = require('./users');
 const groupRoutes = require('./groups');
 const sessionRoutes = require('./sessions');
 const taskRoutes = require('./tasks');
 const resourceRoutes = require('./resources');
-
-// ─── Mount Routes ─────────────────────────────────────────────────────────────
 
 // User routes - register, login, logout, profile
 router.use('/users', userRoutes);

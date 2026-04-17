@@ -1,6 +1,4 @@
-// middleware/auth.js
-// Protects routes by checking if a user is logged in via session
-// Authors: Ireoluwatomiwa Awonola, Olimeh Kelvin, Francis Ngonadi
+// This protects routes by checking if a user is logged in via session
 
 const User = require('../models/User');
 
