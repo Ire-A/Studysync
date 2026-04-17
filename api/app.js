@@ -38,6 +38,19 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((err) => console.error('MongoDB connection error:', err));
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
+app.get('/', (req, res) => {
+  // You can send any response you like
+  res.json({ 
+    message: 'Welcome to the StudySync API!',
+    endpoints: {
+      register: 'POST /api/users/register',
+      login: 'POST /api/users/login',
+      groups: 'GET /api/groups',
+      // ... list other endpoints for convenience
+    }
+  });
+});
+
 
 const routes = require('./routes/index');
 app.use('/api', routes);
