@@ -1,0 +1,26 @@
+info:
+  name: Update Task
+  type: http
+  seq: 8
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/tasks/69e26cc72eb99b1aaf9715ce"
+  body:
+    type: json
+    data: |-
+      {
+        "completed": true
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: baseUrl
+      value: http://localhost:9000
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

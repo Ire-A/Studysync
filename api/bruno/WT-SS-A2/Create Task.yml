@@ -1,0 +1,28 @@
+info:
+  name: Create Task
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/tasks"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Finish revision notes",
+        "groupId": "69e26bde2eb99b1aaf9715cc",
+        "deadline": "2026-05-01T18:00:00.000Z"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: baseUrl
+      value: http://localhost:9000
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

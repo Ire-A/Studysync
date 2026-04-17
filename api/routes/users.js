@@ -169,4 +169,24 @@ router.put('/profile', auth, async (req, res) => {
   }
 });
 
+// ─── Delete Account ───────────────────────────────────────────────────────────
+
+// DELETE /api/users/profile
+// Deletes the logged in user's account
+router.delete('/profile', auth, async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.user.id);
+
+    // Destroy the session after deleting the account
+    req.session.destroy();
+    res.clearCookie('userName');
+    res.clearCookie('connect.sid');
+
+    res.status(200).json({ message: 'Account deleted successfully' });
+
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
 module.exports = router;

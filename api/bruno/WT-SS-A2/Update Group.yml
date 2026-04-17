@@ -1,0 +1,27 @@
+info:
+  name: Update Group
+  type: http
+  seq: 9
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/groups/69e26bde2eb99b1aaf9715cc"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Web Technologies Group",
+        "description": "Updated description for Web Technologies study group"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: baseUrl
+      value: http://localhost:9000
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,26 @@
+info:
+  name: Update User
+  type: http
+  seq: 14
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/users/profile"
+  body:
+    type: json
+    data: |
+      {
+        "name": "Alex Okeke Updated"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: baseUrl
+      value: http://localhost:9000
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,29 @@
+info:
+  name: Create Resource
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/resources"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Lecture Slides",
+        "groupId": "69e26bde2eb99b1aaf9715cc",
+        "type": "link",
+        "content": "https://moodle.griffith.ie"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: baseUrl
+      value: http://localhost:9000
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

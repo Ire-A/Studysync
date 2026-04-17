@@ -1,0 +1,24 @@
+info:
+  name: Study Session
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: http://localhost:9000/api/sessions
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Lab Revision",
+        "groupId": "69e26bde2eb99b1aaf9715cc",
+        "date": "2026-05-01T18:00:00.000Z",
+        "description": "Revision session for the lab exam"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
