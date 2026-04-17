@@ -5,13 +5,13 @@ info:
 
 http:
   method: POST
-  url: "{{baseUrl}}/api/users/logout"
+  url: "{{render}}/api/users/logout"
   auth: inherit
 
 runtime:
   variables:
     - name: baseUrl
-      value: http://localhost:9000
+      value: https://studysync-iqaq.onrender.com
 
 settings:
   encodeUrl: true

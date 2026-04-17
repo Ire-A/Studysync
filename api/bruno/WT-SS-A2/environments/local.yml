@@ -2,3 +2,5 @@ name: local
 variables:
   - name: baseUrl
     value: http://localhost:9000
+  - name: render
+    value: https://studysync-iqaq.onrender.com

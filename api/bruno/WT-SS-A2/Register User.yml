@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: http://localhost:9000/api/users/register
+  url: "{{baseUrl}}/api/users/register"
   body:
     type: json
     data: |-

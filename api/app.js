@@ -47,7 +47,7 @@ app.get('/', (req, res) => {
     //   login: 'POST /api/users/login',
     //   groups: 'GET /api/groups',
       
-    // }
+    // } commented this out for when the client side is done.
   });
 });
 
