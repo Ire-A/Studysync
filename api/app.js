@@ -16,7 +16,7 @@ app.set('trust proxy', 1);
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://your-frontend-url.onrender.com'
+    'https://studysync-frontend-0vrv.onrender.com'
   ],
   credentials: true
 }));
